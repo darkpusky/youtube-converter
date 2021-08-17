@@ -4,9 +4,8 @@ import os
 
 class Song:
 
-    def __init__(song):
-        song.save_path = '/'.join(os.getcwd().split('/')[:3]) + '\Downloads'
-        song.save_download = 'C:\\Users\\Exolab\\Downloads'
+    def __init__(song,location):
+        song.location = location
         song.options = {
             'format': 'bestaudio/best',
             'postprocessors': [{
@@ -14,12 +13,14 @@ class Song:
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
-            'outtmpl': song.save_download,
+            'outtmpl': song.location+'%(title)s.%(ext)s',
+            'download_archive' : 'storico.txt'
         }
         
     def download(song,link):
         with youtube_dl.YoutubeDL(song.options) as ydl:
             ydl.download([link])
 
-song = Song()
+LOCATION = 'C:/Users/valet/Downloads/YoutubeConverter/'
+song = Song(LOCATION)
 song.download("https://www.youtube.com/watch?v=WLnnMOLiFtg")
