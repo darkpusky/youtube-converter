@@ -10,8 +10,9 @@ class Song:
         song.location = location
         song.link = link
         song.options = {
-            'format': 'bestaudio/best',
+            'format': 'bestaudio[ext=webm]',
             'outtmpl': song.location+'%(title)s.%(ext)s',
+            'quiet' : True,
             ### Archivio cronologia ###
             #'download_archive' : 'storico.txt',
         }
@@ -22,6 +23,13 @@ class Song:
 
     def getRealPath(song):
         return song.yt.prepare_filename(song.getInfo())
+
+    def downloadPlaylist(song):
+        playlist = song.getInfo()
+        for songs in playlist['entries']:
+            song.link = songs['webpage_url']
+            song.download()
+        
         
     def download(song):
         song.yt.download([song.link])
@@ -44,6 +52,7 @@ class Song:
 ### MAIN ###          
 LOCATION = 'C:/Users/valet/Downloads/YoutubeConverter/'
 LINK = "https://www.youtube.com/watch?v=WLnnMOLiFtg"
-#PLAYLIST = "https://www.youtube.com/playlist?list=PL-jfTyhJyYz7fJ8_dhLYZJzTS8uA7HOnx"
+#LINK = "https://www.youtube.com/playlist?list=PL-jfTyhJyYz7fJ8_dhLYZJzTS8uA7HOnx"
 song = Song(LOCATION,LINK)
 song.download()
+#song.downloadPlaylist()

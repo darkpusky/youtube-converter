@@ -1,0 +1,2 @@
+pyinstaller -F --add-data "ffmpeg.exe;." --onefile --noconsole youtube.py
+pyinstaller --onefile --noconsole youtube.spec
