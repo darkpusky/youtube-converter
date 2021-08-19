@@ -54,5 +54,5 @@ LOCATION = 'C:/Users/valet/Downloads/YoutubeConverter/'
 LINK = "https://www.youtube.com/watch?v=WLnnMOLiFtg"
 #LINK = "https://www.youtube.com/playlist?list=PL-jfTyhJyYz7fJ8_dhLYZJzTS8uA7HOnx"
 song = Song(LOCATION,LINK)
-song.download()
+#song.download()
 #song.downloadPlaylist()
