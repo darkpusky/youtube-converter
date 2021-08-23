@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import ttk
+from tkinter import filedialog
 
 ### Initialization of the window in center position ###
 def centerMainWindow(window,w,h):
@@ -34,4 +36,26 @@ def handleChangeLangToIT():
 
 def handleChangeLangToUK():
     #TODO implement chenage of the language
+    return
+
+### Handle creation for directory button ###
+def createDefaultOpendDirButton(parent,image):
+    return Button(parent,borderwidth=1,cursor="hand2",image=image,height=18)
+
+### Handle ask directory ###
+def getDirectory(entry):
+    oldvar = entry.get() #Memorize the old text
+    if entry.get() != "":
+        entry.delete(0,END) #Delete the old text
+    entry.insert(0,filedialog.askdirectory()) #Text from user
+    if(entry.get() == ""):
+        entry.insert(0,oldvar) #Set old text if user cancel the request
+
+### Handle creation for download button ###
+def createDefaultDownloadButton(parent,text):
+    return Button(parent,borderwidth=1,cursor="hand2",text=text)
+
+### Validation for directory on click of the download button ###
+def validationDownload(directory):
+    #TODO
     return
