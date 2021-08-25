@@ -4,8 +4,8 @@ import guifunctions as gfunc
 
 class DownloadPath:
 
-    def __init__(self):
-        self.image = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\openfile-1.png")
+    #def __init__(self):
+        #self.image = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\openfile-1.png")
         #TODO get dir from costants
         
     def start(self,mainframe):
@@ -16,9 +16,9 @@ class DownloadPath:
         frm_DownloadPath_Content = ttk.Frame(frm_DownloadPath)
         frm_DownloadPath_Content.grid(row=0,column=1)
         lbl_DownoadPath = ttk.Label(frm_DownloadPath_Content,text="Cartella di destinazione"+":")
-        txt_DownloadPath = ttk.Entry(frm_DownloadPath_Content,width=60,exportselection=0)
-        btn_DownloadPath = gfunc.createDefaultOpendDirButton(frm_DownloadPath_Content,self.image)
-        btn_DownloadPath.configure(command=lambda:gfunc.getDirectory(txt_DownloadPath))
+        self.txt_DownloadPath = ttk.Entry(frm_DownloadPath_Content,width=60,exportselection=0)
+        self.btn_DownloadPath = gfunc.createDefaultOpendDirButton(frm_DownloadPath_Content,"")
+        self.btn_DownloadPath.configure(command=lambda:gfunc.getDirectory(self.txt_DownloadPath))
         lbl_DownoadPath.grid(row=0,column=0)
-        txt_DownloadPath.grid(row=0,column=1)
-        btn_DownloadPath.grid(row=0,column=2,padx=2)
+        self.txt_DownloadPath.grid(row=0,column=1)
+        self.btn_DownloadPath.grid(row=0,column=2,padx=2)

@@ -4,7 +4,10 @@ import guifunctions as gfunc
 
 class Download:
 
-    def start(self,mainframe):
+    def __init__(self,directoryEntry):
+        self.entry = directoryEntry
+    
+    def start(self,mainframe,queue_frame):
         frm_Download = ttk.Frame(mainframe,borderwidth=1)
         frm_Download.grid(row=4,column=0,sticky=(N, W, E, S))
         frm_Download.columnconfigure(list(range(7)),weight=1)
@@ -38,3 +41,5 @@ class Download:
         btn_Download_Song.grid(row=2,column=0)
         btn_Download_Playlist = gfunc.createDefaultDownloadButton(frm_Download_Playlist,"Download")
         btn_Download_Playlist.grid(row=2,column=0)
+        btn_Download_Song.configure(command=lambda:gfunc.createSong(queue_frame,self.entry.get()))
+        btn_Download_Playlist.configure(command=lambda:gfunc.createSong(queue_frame,self.entry.get()))
