@@ -15,4 +15,7 @@ def deleteDuplicate(path):
 
 def retrieveNewName(path,location):
     name = os.path.splitext(os.path.basename(path))[0]
-    return location + name
+    return location + "/" + name
+
+def moveFile(old,new):
+    os.replace(old + '.mp3',new + '.mp3')

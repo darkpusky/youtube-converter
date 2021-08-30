@@ -3,9 +3,9 @@ from tkinter import ttk
 import guifunctions as gfunc
 
 class Head:
-    #def __init__(self):
-        #self.italy = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\italy2.png")
-        #self.uk = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\uk2.png")
+    def __init__(self):
+        self.italy = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\italy2.png")
+        self.uk = PhotoImage(file = r"C:\Users\valet\Desktop\youtube_converter\youtube-converter\utils\uk2.png")
         #TODO get dir from costants
         
     def start(self,mainframe):
@@ -35,8 +35,8 @@ class Head:
         #TODO style of the buttons
 
         ### Language buttons ###
-        btn_Head_Lang_It = gfunc.createDefaultLangButton(frm_Head_Langs,"")
-        btn_Head_Lang_En = gfunc.createDefaultLangButton(frm_Head_Langs,"")
+        btn_Head_Lang_It = gfunc.createDefaultLangButton(frm_Head_Langs,self.italy)
+        btn_Head_Lang_En = gfunc.createDefaultLangButton(frm_Head_Langs,self.uk)
         btn_Head_Lang_It.configure(command=lambda:gfunc.handleChangeLangToIT())
         btn_Head_Lang_En.configure(command=lambda:gfunc.handleChangeLangToUK())
         btn_Head_Lang_It.grid(row=0,column=0,sticky=(N,E),padx=2)

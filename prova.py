@@ -1,66 +1,107 @@
-import tkinter as tk
+'''convert a range of different audio files to mp3 files
+using multiple parallel processes'''
 
-root = tk.Tk()
-root.grid_rowconfigure(0, weight=1)
-root.columnconfigure(0, weight=1)
+import os
+import sys
+import subprocess
+from multiprocessing.pool import ThreadPool
+from multiprocessing import cpu_count
+import time
+import datetime
 
-frame_main = tk.Frame(root, bg="gray")
-frame_main.grid(sticky='news')
-frame_main.columnconfigure(0,weight=1)
-frame_main.rowconfigure(2,weight=1)
+def converttomp3(task):
+    '''Start up a new ffmpeg subprocess transcode the given audio file
+    and save the newly transcoded file to a directory within the same
+    directory of the original audio '''
+    root_path = task[0]
+    filename = task[1]
+    full_path = os.path.join(root_path, filename)
+    new_filename = os.path.splitext(filename)[0] +".mp3"
+    new_path = os.path.join(root_path,
+                            os.path.basename(root_path) + "-" + FOLDER_NAME,
+                            new_filename)
 
-label1 = tk.Label(frame_main, text="Label 1", fg="green")
-label1.grid(row=0, column=0, pady=(5, 0), sticky='nw')
+    completed = subprocess.run(["ffmpeg",
+                                "-loglevel",
+                                "quiet",
+                                "-hide_banner",
+                                "-y",
+                                "-i",
+                                full_path,
+                                "-write_id3v1",
+                                "1",
+                                "-id3v2_version",
+                                "3",
+                                "-codec:a",
+                                "libmp3lame",
+                                "-q:a",
+                                "3",
+                                new_path],
+                               stderr=subprocess.DEVNULL,
+                               stdout=subprocess.DEVNULL,
+                               stdin=subprocess.PIPE)
+    #If you don't provide stdin pipe, ffmpeg will not exit gracefully
+    #when running multiple instances and will require you to reset your
+    # terminal once this script finishes executing
+    #Remove the original files once they have been transcoded
+    #if completed.returncode == 0:
+        #subprocess.call(["rm", full_path]) # remove the original file once transcoded
+    print(f"'{new_path}' - return code {completed.returncode}")
+    if completed.returncode != 0:
+        completed.timestamp = datetime.datetime.now().ctime()
+    return completed
 
-label2 = tk.Label(frame_main, text="Label 2", fg="blue")
-label2.grid(row=1, column=0, pady=(5, 0), sticky='nw')
+if __name__ == "__main__":
+    FOLDERS = []
+    FOLDER_NAME = "MP3s"
+    AUDIO_FILE_TYPES = ("flac",
+                        "aac",
+                        "aiff",
+                        "m4a",
+                        "ogg",
+                        "opus",
+                        "raw",
+                        "wav",
+                        "wma",
+                        "webm")
+    STARTTIME = time.time()
+    #get all of the source audio filenames
+    for root, dirs, files in os.walk(os.getcwd()):
+        source_audio_filenames = []
+        for file in files:
+            if file.endswith(AUDIO_FILE_TYPES):
+                source_audio_filenames.append((root, file))
+        FOLDERS.append((root, source_audio_filenames))
 
-label3 = tk.Label(frame_main, text="Label 3", fg="red")
-label3.grid(row=3, column=0, pady=5, sticky='nw')
-
-# Create a frame for the canvas with non-zero row&column weights
-frame_canvas = tk.Frame(frame_main)
-frame_canvas.grid(row=2, column=0, pady=(5, 0), sticky='nwse')
-frame_canvas.grid_rowconfigure(0, weight=1)
-frame_canvas.grid_columnconfigure(0, weight=1)
-# Set grid_propagate to False to allow 5-by-5 buttons resizing later
-frame_canvas.grid_propagate(False)
-
-# Add a canvas in that frame
-canvas = tk.Canvas(frame_canvas, bg="yellow")
-canvas.grid(row=0, column=0, sticky="news")
-
-# Link a scrollbar to the canvas
-vsb = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
-vsb.grid(row=0, column=1, sticky='ns')
-canvas.configure(yscrollcommand=vsb.set)
-
-# Create a frame to contain the buttons
-frame_buttons = tk.Frame(canvas, bg="blue")
-canvas.create_window((0, 0), window=frame_buttons, anchor='nw')
-frame_buttons.columnconfigure(list(range(7)),weight=1)
-frame_buttons.rowconfigure(list(range(10)),weight=1)
-
-# Add 9-by-5 buttons to the frame
-rows = 2
-columns = 3
-buttons = [[tk.Button() for j in range(columns)] for i in range(rows)]
-for i in range(0, rows):
-    for j in range(0, columns):
-        buttons[i][j] = tk.Button(frame_buttons, text=("%d,%d" % (i+1, j+1)))
-        buttons[i][j].grid(row=i, column=j, sticky='news')
-
-# Update buttons frames idle tasks to let tkinter calculate buttons sizes
-frame_buttons.update_idletasks()
-
-# Resize the canvas frame to show exactly 5-by-5 buttons and the scrollbar
-##first5columns_width = sum([buttons[0][j].winfo_width() for j in range(0, 5)])
-##first5rows_height = sum([buttons[i][0].winfo_height() for i in range(0, 5)])
-##frame_canvas.config(width=first5columns_width + vsb.winfo_width(),
-##                    height=first5rows_height)
-
-# Set the canvas scrolling region
-canvas.config(scrollregion=canvas.bbox("all"))
-
-# Launch the GUI
-root.mainloop()
+    with ThreadPool(cpu_count())as p:
+        PROCESSES = []
+        for Folder in FOLDERS:
+            try:
+                #Stop directories being created within the output directories
+                if FOLDER_NAME in Folder[0]:
+                    continue
+                NewFolderName = os.path.basename(Folder[0]) + "-" + FOLDER_NAME
+                os.mkdir(os.path.join(Folder[0], NewFolderName))
+            except FileExistsError:
+                pass
+            PROCESSES += Folder[1]
+        print(f"Transcoding {len(PROCESSES)} Audio files")
+        JOBS = p.map(converttomp3, PROCESSES)
+        FAILED_JOBS = []
+        for job in JOBS:
+            if job.returncode != 0:
+                FAILED_JOBS.append(job)
+        MESSAGE = (f"Transcode Finished! \r {len(PROCESSES)-len(FAILED_JOBS)}/{len(PROCESSES)} "
+                   f"Audio files transcoded in \r{time.time() - STARTTIME:.4f} seconds")
+        try:
+            subprocess.run(["notify-send", "--urgency=low", MESSAGE])
+        except FileNotFoundError:
+            pass
+        
+        if len(FAILED_JOBS) > 0:       
+            with open("nautilus-transcode.log", 'a+') as f:
+                for failedJob in FAILED_JOBS:
+                    f.write(f"{failedJob.timestamp} args:{failedJob.args}"
+                            f"return code:{failedJob.returncode}\n")
+    print("Done")
+    sys.exit(0)
