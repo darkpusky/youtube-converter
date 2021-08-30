@@ -57,6 +57,11 @@ class FrameSong:
             sep_Frame = ttk.Separator(parent,orient=HORIZONTAL)
             sep_Frame.pack(fill=BOTH,side=BOTTOM,padx=10,pady=5)
 
+        #Delete none label from frame
+        if int(nsong) <= 1: #Sta per essere creata una sola canzone
+            print("qui")
+            parent.winfo_children()[0].destroy()
+        
         frm_Object.pack(fill=X,side=BOTTOM,expand=TRUE,pady=5)
         frm_Object.grid_propagate(0)
 

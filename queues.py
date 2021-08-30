@@ -14,6 +14,9 @@ class Queues:
         self.frm_Queue = Frame(canvas_Queue)
         frm_Inner_Canvas = canvas_Queue.create_window((0,0), window=self.frm_Queue,anchor=NW)
 
+        lbl_None = Label(self.frm_Queue,text="Non ci sono elementi da visualizzare.\nScarica qualcosa!")
+        lbl_None.pack(fill=X)
+        
         scrl_Queue = Scrollbar(frm_Queue_Container,orient=VERTICAL,command=canvas_Queue.yview)
         scrl_Queue.pack(side=RIGHT,fill=Y)
         canvas_Queue.config(yscrollcommand=scrl_Queue.set)

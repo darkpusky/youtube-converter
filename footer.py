@@ -26,5 +26,9 @@ class Footer:
         lbl_Copyright = Label(frm_Footer,text="© 2021 VTP. Tutti i diritti sono riservati.")
         lbl_Copyright.grid(row=1,column=0,columnspan=4,sticky=(S,W,E))
 
+        lbl_Version = Label(frm_Footer,text="v0.7")
+        #TODO version da costante
+        lbl_Version.grid(row=1,column=3,sticky=(E,S))
+        
         btn_feedback = gfunc.createFeedbackButton(frm_Footer,"Feedback")
         btn_feedback.grid(row=0,column=3,sticky=(W))

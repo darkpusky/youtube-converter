@@ -39,9 +39,6 @@ class Download:
         txt_Download_Song.insert(0,"https://www.youtube.com/watch?v=WLnnMOLiFtg")
         ### MOCK ###
         txt_Download_Playlist = ttk.Entry(frm_Download_Playlist_Path,exportselection=0,width=40)
-        ### MOCK ###
-        txt_Download_Playlist.insert(0,"https://www.youtube.com/playlist?list=PL7KJ8NgcCDuUftHEusHd3VWkl1BKC__Rs")
-        ### MOCK ###
         txt_Download_Song.grid(row=0,column=1)
         txt_Download_Playlist.grid(row=0,column=1)
 

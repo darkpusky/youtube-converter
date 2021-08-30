@@ -23,14 +23,18 @@ window.columnconfigure(0,weight=1)
 window.rowconfigure(0,weight=1)
 
 ### Main frame ###
-mainframe = ttk.Frame(window,borderwidth=2)
+mainframe = ttk.Frame(window)
 mainframe.grid(column=0,row=0,sticky=(N, W, E, S),padx=5,pady=5)
 mainframe.columnconfigure(0,weight=1)
 mainframe.rowconfigure(list(range(25)),weight=1)
-#TODO style
+
+style = ttk.Style()
+style.theme_use('alt')
+window.configure(bg='#E8E8E8') #Window
+style.configure('TFrame',background='#E8E8E8') #Frames
+style.configure('TLabel',background='#E8E8E8') #Labels
 
 ############ SECTIONS ############
-
 ####### Theme & Language #######
 head = Head()
 head.start(mainframe)
