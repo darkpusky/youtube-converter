@@ -166,7 +166,7 @@ def createPlaylist(parent,directory,entryLink,array):
 
 ### Handle creation for feedback button ###
 def createFeedbackButton(parent,text):
-    return Button(parent,borderwidth=1,cursor="hand2",text=text)
+    return Button(parent,cursor="hand2",text=text)
 
 ### Handle paste link download ###
 def pasteLink(entry,window):
