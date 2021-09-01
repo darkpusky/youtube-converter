@@ -60,13 +60,12 @@ class Download:
         self.txt_Download_Song.bind('<Return>',lambda e:gfunc.createSong(queue_frame,self.entry.get(),self.txt_Download_Song,self.song_list))
         self.txt_Download_Playlist.bind('<Return>',lambda e:gfunc.createPlaylist(queue_frame,self.entry.get(),self.txt_Download_Playlist,self.song_list))
 
-        ##Da levare
-        self.changeTheme()
-        ###
-
-    def changeTheme(self):
-        self.btn_Paste_Download_Song.configure(background="#FAF3F3",activebackground="#FAF3F3")
-        self.btn_Paste_Download_Playlist.configure(background="#FAF3F3",activebackground="#FAF3F3")
-        
-        self.btn_Download_Song.configure(background="#FAF3F3",activebackground="#FAF3F3")
-        self.btn_Download_Playlist.configure(background="#FAF3F3",activebackground="#FAF3F3")
+    def changeTheme(self,theme):
+        if theme == "dark":
+            pass
+        elif theme == "light":
+            self.btn_Paste_Download_Song.configure(background="#FAF3F3",activebackground="#FAF3F3")
+            self.btn_Paste_Download_Playlist.configure(background="#FAF3F3",activebackground="#FAF3F3")
+            
+            self.btn_Download_Song.configure(background="#FAF3F3",activebackground="#FAF3F3")
+            self.btn_Download_Playlist.configure(background="#FAF3F3",activebackground="#FAF3F3")

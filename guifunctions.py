@@ -21,16 +21,18 @@ def createDefaultThemeButton(parent,text):
     return Button(parent,text=text,borderwidth=1,cursor="hand2",highlightthickness=0,width=7,height=2)
 
 ### Handle commands for theme buttons ###
-def handleChangeThemeToDark(light,dark):
+def handleChangeThemeToDark(light,dark,callback):
     if dark['relief'] == "raised":
         light.configure(relief="raised")
         dark.configure(relief="sunken")
+        callback()
     #TODO implement change of the style
 
-def handleChangeThemeToLight(light,dark):
+def handleChangeThemeToLight(light,dark,callback):
     if light['relief'] == "raised":
         light.configure(relief="sunken")
         dark.configure(relief="raised")
+        callback()
     #TODO implement change of the style
 
 ### Handle creation for lang buttons ###

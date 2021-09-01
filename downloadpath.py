@@ -26,9 +26,8 @@ class DownloadPath:
         self.txt_DownloadPath.grid(row=0,column=1)
         self.btn_DownloadPath.grid(row=0,column=2,padx=2)
 
-        #Da levare
-        self.changeTheme()
-        ###
-
-    def changeTheme(self):
-        self.btn_DownloadPath.configure(background="#FAF3F3",activebackground="#FAF3F3")
+    def changeTheme(self,theme):
+        if theme == "dark":
+            pass
+        elif theme == "light":
+            self.btn_DownloadPath.configure(background="#FAF3F3",activebackground="#FAF3F3")

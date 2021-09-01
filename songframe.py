@@ -59,7 +59,6 @@ class FrameSong:
 
         #Delete none label from frame
         if int(nsong) <= 1: #Sta per essere creata una sola canzone
-            print("qui")
             parent.winfo_children()[0].destroy()
         
         frm_Object.pack(fill=X,side=BOTTOM,expand=TRUE,pady=5)

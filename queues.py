@@ -42,14 +42,13 @@ class Queues:
         self.frm_Queue.bind("<Configure>",OnFrameConfigure)
         self.canvas_Queue.bind("<Configure>",FrameWidth)
         self.canvas_Queue.bind_all("<MouseWheel>",ScrollWheel)
-
-        ##Da levare
-        self.changeTheme()
-        ####
         
-    def changeTheme(self):
-        self.canvas_Queue.configure(background="#FAF3F3")
-        #self.lbl_None.configure(background="#FAF3F3")
-        for elem in self.frm_Queue.winfo_children():
-            elem.configure(background="#FAF3F3")
+    def changeTheme(self,theme):
+        if theme == "dark":
+            pass
+        elif theme == "light":
+            self.canvas_Queue.configure(background="#FAF3F3")
+            #self.lbl_None.configure(background="#FAF3F3")
+            for elem in self.frm_Queue.winfo_children():
+                elem.configure(background="#FAF3F3")
         

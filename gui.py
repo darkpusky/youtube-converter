@@ -6,6 +6,7 @@ from head import Head
 from download import Download
 from queues import Queues
 from footer import Footer
+from theme import Theme
 
 class Main():
 
@@ -14,55 +15,65 @@ class Main():
         ### OPTIONS ###
         MWW = 800 #Main window width
         MWH = 650 #Main window height
+        THEME = "light"
 
         ### Create Main Window ###
-        window = Tk()
+        self.window = Tk()
         #window.withdraw()
-        window.title("Youtube Converter")
-        window.minsize(MWW,MWH)
-        window.maxsize(1920,1080)
-        window.geometry('800x650' + gfunc.centerMainWindow(window,MWW,MWH))
-        window.columnconfigure(0,weight=1)
-        window.rowconfigure(0,weight=1)
+        self.window.title("Youtube Converter")
+        self.window.minsize(MWW,MWH)
+        self.window.maxsize(1920,1080)
+        self.window.geometry('800x650' + gfunc.centerMainWindow(self.window,MWW,MWH))
+        self.window.columnconfigure(0,weight=1)
+        self.window.rowconfigure(0,weight=1)
 
         ### Main frame ###
-        mainframe = ttk.Frame(window)
+        mainframe = ttk.Frame(self.window)
         mainframe.grid(column=0,row=0,sticky=(N, W, E, S),padx=5,pady=5)
         mainframe.columnconfigure(0,weight=1)
         mainframe.rowconfigure(list(range(25)),weight=1)
 
+        self.theme = Theme()
+        
+            
         ############ SECTIONS ############
         ####### Theme & Language #######
-        head = Head()
-        head.start(mainframe)
+        self.head = Head(self.callbackThemeLight,self.callbackThemeDark)
+        self.head.start(mainframe)
 
         ####### Download path #######
-        downloadPath = DownloadPath()
-        downloadPath.start(mainframe)
+        self.downloadPath = DownloadPath()
+        self.downloadPath.start(mainframe)
 
         ####### Download #######
-        download = Download(downloadPath.txt_DownloadPath)
+        self.download = Download(self.downloadPath.txt_DownloadPath)
 
         ####### Queue #######
-        queue = Queues()
-        queue.start(mainframe)
+        self.queue = Queues()
+        self.queue.start(mainframe)
 
         #Download viene fatto partire dopo perchè serve il frame di Queue
-        download.start(mainframe,queue.frm_Queue,window)
+        self.download.start(mainframe,self.queue.frm_Queue,self.window)
 
         ####### Footer #######
-        footer = Footer()
-        footer.start(mainframe)
+        self.footer = Footer()
+        self.footer.start(mainframe)
 
-        style = ttk.Style()
-        style.theme_use('alt')
-        window.configure(bg='white') #Window
-        general_font = ('Courier New Baltic', 10)
-        window.option_add("*Font", general_font) #Font
-        style.configure('TFrame',background='white') #Frames
-        style.configure('TLabel',background='white') #Labels
+        self.changeTheme(THEME)
+        self.callbackThemeLight()
+        self.window.mainloop()
 
-        window.mainloop()
+    def changeTheme(self,color):
+        if color == "light":
+            self.theme.changeToLight(self.window,self.head,self.downloadPath,self.download,self.queue,self.footer)
+        elif color == "dark":
+            self.theme.changeToDark(self.window,self.head,self.downloadPath,self.download,self.queue,self.footer)
 
+    def callbackThemeLight(self):
+        self.changeTheme("light")
+
+    def callbackThemeDark(self):
+        self.changeTheme("dark")
+        
 if __name__ == "__main__":
     Main()

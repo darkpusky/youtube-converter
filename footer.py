@@ -33,9 +33,8 @@ class Footer:
         self.btn_feedback = gfunc.createFeedbackButton(frm_Footer,"Feedback")
         self.btn_feedback.grid(row=0,column=3,sticky=(W))
 
-        ##Da levare
-        self.changeTheme()
-        ####
-
-    def changeTheme(self): #TODO string theme
-        self.btn_feedback.configure(background="red",activebackground="red")
+    def changeTheme(self,theme):
+        if theme == "dark":
+            pass
+        elif theme == "light":
+            self.btn_feedback.configure(background="red",activebackground="red")

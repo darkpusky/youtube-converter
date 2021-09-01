@@ -3,9 +3,11 @@ from tkinter import ttk
 import guifunctions as gfunc
 
 class Head:
-    def __init__(self):
+    def __init__(self,cbLight,cbDark):
         self.italy = PhotoImage(file = r".\utils\italy2.png")
         self.uk = PhotoImage(file = r".\utils\uk2.png")
+        self.callbackLight = cbLight
+        self.callbackDark = cbDark
         #TODO get dir from costants
         
     def start(self,mainframe):
@@ -13,11 +15,6 @@ class Head:
         frm_Head.grid(row=0,column=0,sticky=(N, W, E, S))#Positioning Row
         frm_Head.columnconfigure(list(range(3)),weight=1)
         frm_Head.rowconfigure(0,weight=1)
-        
-        #Theme & Language ha una griglia di 1X3
-        #1X1 ha i temi da scegliere, due bottoni
-        #1x2 cella di passaggio
-        #1x3 ha le lingue da scegliere, due bottoni separati
         
         ### Griglia ###
         frm_Head_Themes = ttk.Frame(frm_Head)
@@ -28,8 +25,8 @@ class Head:
         ### Theme buttons ###
         self.btn_Head_Theme_Light = gfunc.createDefaultThemeButton(frm_Head_Themes,"Light")
         self.btn_Head_Theme_Dark = gfunc.createDefaultThemeButton(frm_Head_Themes,"Dark")
-        self.btn_Head_Theme_Light.configure(relief="sunken",command=lambda:gfunc.handleChangeThemeToLight(self.btn_Head_Theme_Light,self.btn_Head_Theme_Dark))
-        self.btn_Head_Theme_Dark.configure(command=lambda:gfunc.handleChangeThemeToDark(self.btn_Head_Theme_Light,self.btn_Head_Theme_Dark))
+        self.btn_Head_Theme_Light.configure(relief="sunken",command=lambda:gfunc.handleChangeThemeToLight(self.btn_Head_Theme_Light,self.btn_Head_Theme_Dark,self.callbackLight))
+        self.btn_Head_Theme_Dark.configure(command=lambda:gfunc.handleChangeThemeToDark(self.btn_Head_Theme_Light,self.btn_Head_Theme_Dark,self.callbackDark))
         self.btn_Head_Theme_Light.grid(row=0,column=0,sticky=(N,W))
         self.btn_Head_Theme_Dark.grid(row=0,column=1,sticky=(N,W))
         #TODO style of the buttons
@@ -47,10 +44,14 @@ class Head:
         ####
     def changeTheme(self,theme):
         if theme == "dark":
+            self.btn_Head_Lang_It.configure(background="#171717",activebackground="#171717")
+            self.btn_Head_Lang_En.configure(background="#171717",activebackground="#171717")
+            self.btn_Head_Theme_Light.configure(background="#FAF3F3",activebackground="#FAF3F3",foreground="black",activeforeground="black")
+            self.btn_Head_Theme_Dark.configure(background="#C8C6C6",activebackground="#C8C6C6",foreground="black",activeforeground="black")
 
         elif theme == "light":
             self.btn_Head_Lang_It.configure(background="white",activebackground="white")
             self.btn_Head_Lang_En.configure(background="white",activebackground="white")
             self.btn_Head_Theme_Light.configure(background="#FAF3F3",activebackground="#FAF3F3")
-            self.btn_Head_Theme_Dark.configure(background="#C8C6C6",activebackground="#C8C6C6")
+            self.btn_Head_Theme_Dark.configure(background="#C8C6C6",activebackground="#C8C6C6",foreground="black",activeforeground="black")
         
