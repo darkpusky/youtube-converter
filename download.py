@@ -62,7 +62,11 @@ class Download:
 
     def changeTheme(self,theme):
         if theme == "dark":
-            pass
+            self.btn_Paste_Download_Song.configure(background="#C8C6C6",activebackground="#C8C6C6")
+            self.btn_Paste_Download_Playlist.configure(background="#C8C6C6",activebackground="#C8C6C6")
+            
+            self.btn_Download_Song.configure(background="#C8C6C6",activebackground="#C8C6C6",foreground="black")
+            self.btn_Download_Playlist.configure(background="#C8C6C6",activebackground="#C8C6C6",foreground="black")
         elif theme == "light":
             self.btn_Paste_Download_Song.configure(background="#FAF3F3",activebackground="#FAF3F3")
             self.btn_Paste_Download_Playlist.configure(background="#FAF3F3",activebackground="#FAF3F3")

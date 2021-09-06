@@ -35,6 +35,6 @@ class Footer:
 
     def changeTheme(self,theme):
         if theme == "dark":
-            pass
+            self.btn_feedback.configure(background="red",activebackground="red",foreground="black")
         elif theme == "light":
             self.btn_feedback.configure(background="red",activebackground="red")

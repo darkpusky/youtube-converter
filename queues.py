@@ -45,7 +45,10 @@ class Queues:
         
     def changeTheme(self,theme):
         if theme == "dark":
-            pass
+            self.canvas_Queue.configure(background="#C8C6C6")
+            #self.lbl_None.configure(foreground="black")
+            for elem in self.frm_Queue.winfo_children():
+                elem.configure(background="#C8C6C6")
         elif theme == "light":
             self.canvas_Queue.configure(background="#FAF3F3")
             #self.lbl_None.configure(background="#FAF3F3")

@@ -28,6 +28,6 @@ class DownloadPath:
 
     def changeTheme(self,theme):
         if theme == "dark":
-            pass
+            self.btn_DownloadPath.configure(background="#C8C6C6",activebackground="#C8C6C6")
         elif theme == "light":
             self.btn_DownloadPath.configure(background="#FAF3F3",activebackground="#FAF3F3")
