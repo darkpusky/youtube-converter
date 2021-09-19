@@ -11,6 +11,7 @@ class Theme():
         self.style.theme_use('alt')
         general_font = ('Courier New Baltic', 10)
         window.option_add("*Font", general_font) #Font
+        window.option_add("*Dialog*Background", "orange") #Message boxes
         window.tk_setPalette(background="white",foreground='black')
         window.configure(bg='white',) #Window
         self.style.configure('TFrame',background='white') #Frames

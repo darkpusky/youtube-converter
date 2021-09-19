@@ -16,7 +16,8 @@ class Song:
             'outtmpl': song.location+'/'+'%(title)s.%(ext)s',
             'quiet' : True,
             'nocheckcertificate' : True,
-            'progress_hooks': [],
+            'progress_hooks' : [],
+            'cookiefile' : "./youtube.txt",
             ### Archivio cronologia ###
             #'download_archive' : 'storico.txt',
         }

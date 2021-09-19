@@ -3,6 +3,7 @@ youtube.spec
 dist/ffmpeg.exe
 ffmpeg.exe
 storico.txt
+options.properties
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

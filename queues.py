@@ -1,11 +1,12 @@
 from tkinter import *
 from tkinter import ttk
 import guifunctions as gfunc
+from lang import getLabelIt,getLabelEn
 
 class Queues:
 
     def start(self,mainframe):
-        self.frm_Queue_Container = Frame(mainframe,highlightbackground="red",highlightcolor="red",highlightthickness=2)
+        self.frm_Queue_Container = Frame(mainframe,highlightbackground="red",highlightcolor="red",highlightthickness=2,borderwidth=0)
         self.frm_Queue_Container.grid(row=7,column=0,sticky=(N, W, E, S),rowspan=16)
         #TODO style container
         
@@ -14,8 +15,8 @@ class Queues:
         self.frm_Queue = Frame(self.canvas_Queue)
         frm_Inner_Canvas = self.canvas_Queue.create_window((0,0), window=self.frm_Queue,anchor=NW)
 
-        self.lbl_None = Label(self.frm_Queue,text="Non ci sono elementi da visualizzare.\nScarica qualcosa!")
-        self.lbl_None.pack(fill=X)
+        self.lbl_None = Label(self.frm_Queue)
+        self.lbl_None.pack(fill=X,padx=(0,4))
         
         scrl_Queue = Scrollbar(self.frm_Queue_Container,orient=VERTICAL,command=self.canvas_Queue.yview)
         scrl_Queue.pack(side=RIGHT,fill=Y)
@@ -45,13 +46,25 @@ class Queues:
         
     def changeTheme(self,theme):
         if theme == "dark":
-            self.canvas_Queue.configure(background="#C8C6C6")
-            #self.lbl_None.configure(foreground="black")
+            self.canvas_Queue.configure(background="#171717")
+            self.lbl_None.configure(foreground="#FAF3F3")
             for elem in self.frm_Queue.winfo_children():
-                elem.configure(background="#C8C6C6")
+                try:
+                    elem.configure(background="#171717")
+                except:
+                    pass
         elif theme == "light":
-            self.canvas_Queue.configure(background="#FAF3F3")
-            #self.lbl_None.configure(background="#FAF3F3")
+            self.canvas_Queue.configure(background="white")
+            self.lbl_None.configure(background="white")
             for elem in self.frm_Queue.winfo_children():
-                elem.configure(background="#FAF3F3")
+                try:
+                    elem.configure(background="white")
+                except:
+                    pass
         
+    def changeLang(self,lang):
+        if lang == "it":
+            self.lbl_None.configure(text = getLabelIt("none"))
+        elif lang == "en":
+            self.lbl_None.configure(text = getLabelEn("none"))
+            

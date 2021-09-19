@@ -9,6 +9,7 @@ from PIL import Image, ImageTk
 from io import BytesIO
 from urllib.request import urlopen
 from threading import Thread
+from lang import getLabelIt,getLabelEn
 
 ### Initialization of the window in center position ###
 def centerMainWindow(window,w,h):
@@ -39,15 +40,6 @@ def handleChangeThemeToLight(light,dark,callback):
 def createDefaultLangButton(parent,image):
     return Button(parent,borderwidth=0,cursor="hand2",image=image,relief="flat")
 
-### Handle commands for language buttons ###
-def handleChangeLangToIT():
-    #TODO implement change of the language
-    return
-
-def handleChangeLangToUK():
-    #TODO implement chenage of the language
-    return
-
 ### Handle creation for directory button ###
 def createDefaultOpendDirButton(parent,image):
     return Button(parent,borderwidth=1,cursor="hand2",image=image,height=18)
@@ -66,20 +58,29 @@ def createDefaultDownloadButton(parent,text):
     return Button(parent,borderwidth=1,cursor="hand2",text=text)
 
 ### Validation for directory on click of the download button ###
-def validationPathDownload(directory):
+def validationPathDownload(directory,lang):
     if directory == "": #Empty directory
-        messagebox.showinfo(message="La cartella di destinazione non può essere vuota")
+        if lang == "it":    
+            messagebox.showinfo(message= getLabelIt("empty_dir"))
+        elif lang == "en":
+            messagebox.showinfo(message= getLabelEn("empty_dir"))
         return False
     if not utils.isExistDir(directory): #Path does not exist
-        messagebox.showerror(message="La cartella di destinazione non esiste")
+        if lang == "it":
+            messagebox.showerror(message= getLabelIt("exist_dir"))
+        elif lang == "en":
+            messagebox.showerror(message= getLabelEn("exist_dir"))
         return False
     if not utils.isDir(directory): #Path is not a directory
-        messagebox.showerror(message="La cartella di destinazione non è una cartella valida")
+        if lang == "it":
+            messagebox.showerror(message= getLabelIt("valid_dir"))
+        elif lang == "en":
+            messagebox.showerror(message= getLabelEn("valid_dir"))
         return False
     return True
 
 def isSong(link):
-    if "www.youtube.com" not in link:
+    if "youtube.com" not in link:
         return False
     if "watch?v=" not in link:
         return False
@@ -88,28 +89,39 @@ def isSong(link):
     return True
 
 def isPlaylist(link):
-    if "www.youtube.com" not in link:
+    if "youtube.com" not in link:
         return False
     if "list=" not in link:
         return False
     return True
 
 ### Validation for link on click download button ###
-def validationLink(link,song):
+def validationLink(link,song,lang):
     if link == "": #Empty link song,playlist
-        messagebox.showinfo(message="Il link non può essere vuoto")
+        if lang == "it":
+            messagebox.showinfo(message= getLabeIt("empty_link"))
+        elif lang == "en":
+            messagebox.showinfo(message= getLabeEn("empty_link"))
         return False
     #song = True if come from createSong
     #song = False if come from createPlaylist
     if song and not isSong(link):
-        messagebox.showerror(message="Il link non sembra valido,deve essere del tipo:\n-\"https://www.youtube.com/watch?v=AAAAAAAAAAA\"")
+        if lang == "it":
+            messagebox.showerror(message= getLabelIt("valid_song"))
+        elif lang == "en":
+            messagebox.showerror(message= getLabelEn("valid_song"))
+        return False
     elif not song and not isPlaylist(link):
-        messagebox.showerror(message="Il link non sembra valido,deve essere del tipo:\n-\"https://www.youtube.com/watch?v=AAAAAAAAAAA&list=AAAA...\"")
+        if lang == "it":
+            messagebox.showerror(message= getLabelIt("valid_playlist"))
+        elif lang == "en":
+            messagebox.showerror(message= getLabelEn("valid_playlist"))
+        return False
     return True
         
 ### Validation general download ###
-def validationDownload(directory,link,song):
-    return validationLink(link,song) and validationPathDownload(directory)
+def validationDownload(directory,link,song,lang):
+    return validationLink(link,song,lang) and validationPathDownload(directory,lang)
     
 ### Create thumbnail for song ###
 def createThumbnail(label,url):
@@ -142,29 +154,33 @@ def setProgress(progress,style,n,label,text):
     label.configure(text=text)
 
 ### Creation of the frame for queue ###
-def createSong(parent,directory,entryLink,array):
-    if validationDownload(directory,entryLink.get(),True):
+def createSong(parent,directory,entryLink,array,lang):
+    if validationDownload(directory,entryLink.get(),True,lang):
         song = Song(directory,entryLink.get())
-        FrameSong().createFrameSong(parent,utils.isNotSingle(array),song,str(len(array)+1))
+        frame = FrameSong()
+        frame.createFrameSong(parent,utils.isNotSingle(array),song,str(len(array)+1),lang)
         #TODO exception
-        array.append(len(array)+1)
+        array.append(frame)
 
 ### Download single song,only use for playlist ###
-def downloadSong(directory,parent,array,songs):
+def downloadSong(directory,parent,array,songs,lang):
     singleSong = Song(directory,songs['webpage_url'])
-    FrameSong().createFrameSong(parent,utils.isNotSingle(array),singleSong,str(len(array)+1))
+    frame = FrameSong()
+    frame.createFrameSong(parent,utils.isNotSingle(array),singleSong,str(len(array)+1),lang)
+    array.append(frame)
     #TODO exception
 
-def iterator(directory,parent,array,playlist):
+def iterator(directory,parent,array,playlist,lang):
     for songs in playlist:
-        #Thread(target = downloadSong, args=(directory,parent,array,songs)).start()
-        downloadSong(directory,parent,array,songs)
-        array.append(len(array)+1)
+        try:
+            downloadSong(directory,parent,array,songs,lang)
+        except:
+            continue
 
-def createPlaylist(parent,directory,entryLink,array):
-    if validationDownload(directory,entryLink.get(),False):
+def createPlaylist(parent,directory,entryLink,array,lang):
+    if validationDownload(directory,entryLink.get(),False,lang):
         playlist = Song(directory,entryLink.get()).getSongs()
-        Thread(target = iterator, args=(directory,parent,array,playlist)).start()
+        Thread(target = iterator, args=(directory,parent,array,playlist,lang)).start()
 
 ### Handle creation for feedback button ###
 def createFeedbackButton(parent,text):
@@ -174,3 +190,9 @@ def createFeedbackButton(parent,text):
 def pasteLink(entry,window):
     entry.delete(0,END) #Delete the old text
     entry.insert(0,window.clipboard_get())
+
+### Handle missing ffmpeg ###
+def missingFFmpeg(lang):
+    root = Tk()
+    root.withdraw()
+    messagebox.showerror(message= getLabelIt("exist_ffmpeg") if lang == "it" else getLabelEn("exist_ffmpeg")) 

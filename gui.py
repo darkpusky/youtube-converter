@@ -7,19 +7,23 @@ from download import Download
 from queues import Queues
 from footer import Footer
 from theme import Theme
+from lang import Lang
+from requirments import Requirments
+from utils import isExistDir
+import subprocess
 
 class Main():
 
-    def __init__(self):
-        
+    def __init__(self,req):
+        self.requirments = req
         ### OPTIONS ###
         MWW = 800 #Main window width
         MWH = 650 #Main window height
-        THEME = "light"
+        THEME = self.requirments.getOption("theme")
+        LANGUAGE = self.requirments.getOption("language")
 
         ### Create Main Window ###
         self.window = Tk()
-        #window.withdraw()
         self.window.title("Youtube Converter")
         self.window.minsize(MWW,MWH)
         self.window.maxsize(1920,1080)
@@ -34,19 +38,19 @@ class Main():
         mainframe.rowconfigure(list(range(25)),weight=1)
 
         self.theme = Theme()
-        
+        self.lang = Lang()
             
         ############ SECTIONS ############
         ####### Theme & Language #######
-        self.head = Head(self.callbackThemeLight,self.callbackThemeDark)
-        self.head.start(mainframe)
+        self.head = Head(self.callbackThemeLight,self.callbackThemeDark,self.callbackLangIt,self.callbackLangEn)
+        self.head.start(mainframe,THEME)
 
         ####### Download path #######
         self.downloadPath = DownloadPath()
         self.downloadPath.start(mainframe)
 
         ####### Download #######
-        self.download = Download(self.downloadPath.txt_DownloadPath)
+        self.download = Download(self.downloadPath.txt_DownloadPath,THEME)
 
         ####### Queue #######
         self.queue = Queues()
@@ -59,8 +63,10 @@ class Main():
         self.footer = Footer()
         self.footer.start(mainframe)
 
+        ### Inizializa theme and language
         self.changeTheme(THEME)
-        self.callbackThemeLight()
+        self.changeLanguage(LANGUAGE)
+        
         self.window.mainloop()
 
     def changeTheme(self,color):
@@ -70,10 +76,29 @@ class Main():
             self.theme.changeToDark(self.window,self.head,self.downloadPath,self.download,self.queue,self.footer)
 
     def callbackThemeLight(self):
+        self.requirments.setOption("theme","light")
         self.changeTheme("light")
 
     def callbackThemeDark(self):
+        self.requirments.setOption("theme","dark")
         self.changeTheme("dark")
+
+    def changeLanguage(self,lang):
+        if lang == "it":
+            self.lang.changeToIt(self.downloadPath,self.download,self.queue,self.footer)
+        elif lang == "en":
+            self.lang.changeToEn(self.downloadPath,self.download,self.queue,self.footer)
+
+    def callbackLangIt(self):
+        self.requirments.setOption("language","it")
+        self.changeLanguage("it")
+
+    def callbackLangEn(self):
+        self.requirments.setOption("language","en")
+        self.changeLanguage("en")
         
 if __name__ == "__main__":
-    Main()
+    requirments = Requirments()
+    #Se esiste ffmpeg nella cartella allora procede
+    if(requirments.checkFFmpeg()):
+        Main(requirments)
