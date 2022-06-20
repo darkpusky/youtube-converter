@@ -156,11 +156,13 @@ def setProgress(progress,style,n,label,text):
 ### Creation of the frame for queue ###
 def createSong(parent,directory,entryLink,array,lang):
     if validationDownload(directory,entryLink.get(),True,lang):
-        song = Song(directory,entryLink.get())
-        frame = FrameSong()
-        frame.createFrameSong(parent,utils.isNotSingle(array),song,str(len(array)+1),lang)
-        #TODO exception
-        array.append(frame)
+        try:   
+            song = Song(directory,entryLink.get())
+            frame = FrameSong()
+            frame.createFrameSong(parent,utils.isNotSingle(array),song,str(len(array)+1),lang)
+            array.append(frame)
+        except:
+            messagebox.showerror(message= getLabelIt("error_download") if lang == "it" else getLabelEn("error_download"))
 
 ### Download single song,only use for playlist ###
 def downloadSong(directory,parent,array,songs,lang):
@@ -168,19 +170,25 @@ def downloadSong(directory,parent,array,songs,lang):
     frame = FrameSong()
     frame.createFrameSong(parent,utils.isNotSingle(array),singleSong,str(len(array)+1),lang)
     array.append(frame)
-    #TODO exception
 
 def iterator(directory,parent,array,playlist,lang):
     for songs in playlist:
-        try:
-            downloadSong(directory,parent,array,songs,lang)
-        except:
-            continue
+        #try:
+        downloadSong(directory,parent,array,songs,lang)
+        #except:
+         #   continue
 
 def createPlaylist(parent,directory,entryLink,array,lang):
     if validationDownload(directory,entryLink.get(),False,lang):
         playlist = Song(directory,entryLink.get()).getSongs()
         Thread(target = iterator, args=(directory,parent,array,playlist,lang)).start()
+        #handleLoadPlaylist(lang)
+
+### Handle window load playlist ###
+def handleLoadPlaylist(lang):
+    print("qui")
+    top = Toplevel()
+    top.resizable(FALSE,FALSE)
 
 ### Handle creation for feedback button ###
 def createFeedbackButton(parent,text):

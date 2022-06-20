@@ -29,4 +29,6 @@ IT_LANG = {
         "valid_playlist" : "Il link non sembra valido,deve essere del tipo:\n" + LINK_PLAYLIST, 
         #Message boxes requirments
         "exist_ffmpeg" : "Non è stato possibile trovare il file \"ffmpeg.exe\", reinstallare l'applicazione!",
+        #Message boxes download error
+        "error_download" : "Errore di download, riprovare più tardi, se l'errore persiste non contattare l'amministratore",
     }

@@ -12,15 +12,15 @@ class FrameSong:
         frm_Object = Frame(parent,borderwidth=1,height=75)
         frm_Object.rowconfigure(0,weight=1)
         frm_Object.columnconfigure(list(range(20)),weight=1)
+        frm_Object.grid_propagate(0)
 
         frm_Image = Frame(frm_Object,width=150,height=75,highlightbackground = "red", highlightcolor= "red",highlightthickness=2)
         label = Label(frm_Image,width=144,height=70)
         gfunc.createThumbnail(label,song.getThumb())
         label.pack(fill=BOTH)
-        #label.configure(width=frm_Object.width/20*2)
         frm_Image.grid(row=0,column=0,columnspan=3,sticky=(N,W),padx=(5,5))
         
-        frm_Id = Frame(frm_Object,height=75)
+        frm_Id = Frame(frm_Object,height=75,width=421,bg="orange")
         frm_Id.rowconfigure(list(range(2)),weight=1)
         frm_Id.columnconfigure(list(range(80)),weight=1)
         
@@ -37,13 +37,14 @@ class FrameSong:
     
         msg_Name = Label(frm_Id,justify=LEFT,text=song.getTitleSong())
         msg_Name.grid(row=0,column=1,columnspan=79,sticky=(N,W))
-        msg_Name.configure(wraplength=frm_Id.winfo_width()/80*70)
 
         msg_Duration = Label(frm_Id,justify=LEFT,text=song.getDurationSong())
         msg_Duration.grid(row=1,column=1,columnspan=79,sticky=(N,W))
-        
-        frm_Id.grid(row=0,column=3,columnspan=5,sticky=(W,N,S))
+
+        frm_Id.configure(height=75,width=421)
+        frm_Id.grid(row=0,column=3,columnspan=5,sticky=(W,N, E,S))
         frm_Id.grid_propagate(0)
+        frm_Id.update()
         
         sep_Id = ttk.Separator(frm_Object,orient=VERTICAL)
         sep_Id.grid(row=0,column=16,sticky=(N,S,E))
@@ -72,14 +73,17 @@ class FrameSong:
             parent.winfo_children()[0].pack_forget()
         
         frm_Object.pack(fill=X,side=BOTTOM,expand=TRUE,pady=5,padx=(0,4))
-        frm_Object.grid_propagate(0)
+        frm_Object.pack_propagate(0)
 
         #Calcola il momento del wrap al cambio della dimensione del frame ID
         def WrapLabel(event):
-            msg_Name.configure(wraplength=event.width/80*70) #Calcolo della griglia
+            msg_Name.configure(wraplength=event.width/80*68) #Calcolo della griglia
 
         def WidthId(event):
-            frm_Id.configure(width=event.width/20*11)
+            #frm_Id.configure(width=event.width/20*11)
+            frm_Id.configure(width=421)
+            frm_Id.grid_propagate(0)
+            frm_Id.update()
         
         def WidthImage(event):
             label.configure(width=event.width/20*2) #Calcolo della griglia
